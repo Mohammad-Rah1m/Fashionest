@@ -17,7 +17,6 @@ async function getProductData(category) {
 const page = async () => {
 
   const products = await getProductData("products");
-  // console.log(products);
   return (
     <div className='px-5 sm:px-10'>
       <SubPagesBanner title="All Products" description="Discover our All Products page, featuring a diverse collection of fashion items including trendy shirts, stylish trousers, versatile pants, and more. Perfect for every occasion, style, and wardrobe update."/>
