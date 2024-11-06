@@ -14,13 +14,14 @@ export default async function Home() {
   return (
     <div className="home-container px-5">
       <div className="hero-section bg-[url('/images/hero-image.jpg')] h-[450px] bg-cover bg-center rounded-lg relative mt-36 sm:mt-28">
-        <div className="hero-text absolute left-3 bottom-3 right-3 shadow-lg p-5 rounded-lg bg-white bg-opacity-25 text-center sm:left-5 sm:bottom-5 sm:right-auto sm:text-left">
+        <div className="hero-text absolute left-3 bottom-3 right-3  p-5 rounded-lg text-center sm:left-5 sm:bottom-5 sm:right-auto sm:text-left sm:w-[60%]">
           <h1 className="font-bold text-2xl  sm:text-6xl text-orange-500">
             Welcome To FashioNest
           </h1>
-          <p className="text-xl">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. At laborum
-            quibusdam id magni quam!
+          <p className="text-xl text-white">
+            Fashionest is a modern e-commerce website offering stylish fashion
+            products, featuring diverse collections, trendy designs, and
+            seamless shopping experiences.
           </p>
         </div>
       </div>

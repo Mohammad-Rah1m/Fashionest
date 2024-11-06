@@ -5,45 +5,24 @@ import Link from "next/link";
 import { CiShoppingCart, CiCirclePlus, CiCircleMinus } from "react-icons/ci";
 import { FaRegUserCircle, FaShoppingCart } from "react-icons/fa";
 import { IoIosCloseCircle, IoIosClose } from "react-icons/io";
-import { MdDeleteOutline } from "react-icons/md";
+// import { MdDeleteOutline } from "react-icons/md";
 
 import CountdownTimer from "./CountDownTimer";
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import {
   incrementQuantity,
   decrementQuantity,
   removeItemFromCart,
+  setItems,
 } from "@/lib/features/cart/cartSlice";
 
 const Header = () => {
-  const dispatch = useDispatch();
-
-  const handleIncrementQty = (productId) => {
-    dispatch(incrementQuantity(productId));
-  };
-  const handleDecrementQty = (productId) => {
-    dispatch(decrementQuantity(productId));
-  };
-  const handleRemoveItem = (productId) => {
-    dispatch(removeItemFromCart(productId));
-  };
-
-  const [cartOpen, setCartOpen] = useState(false);
-  const cartItems = useSelector((state) => state.cart.items);
-  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-
-  const openCart = () => {
-    setCartOpen(true);
-  };
-
-  const closeCart = () => {
-    setCartOpen(false);
-  };
-
   const [isScrolled, setIsScrolled] = useState(false);
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.items);
+  const [cartOpen, setCartOpen] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -56,6 +35,53 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // const [mounted, setMounted] = useState(false);
+  // useEffect(() => {
+  //   setMounted(true);
+  // }, []);
+
+  const handleIncrementQty = (productId) => {
+    dispatch(incrementQuantity(productId));
+  };
+  const handleDecrementQty = (productId) => {
+    dispatch(decrementQuantity(productId));
+  };
+  const handleRemoveItem = (productId) => {
+    dispatch(removeItemFromCart(productId));
+  };
+
+  const totalPrice = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+  const totalItem = cartItems.reduce(
+    (total,item) => total + item.quantity,
+    0
+  )
+  
+  const openCart = () => {
+    setCartOpen(true);
+  };
+
+  const closeCart = () => {
+    setCartOpen(false);
+  };
+
+   // Load cart items from localStorage when the component mounts
+   useEffect(() => {
+    const storedItems = localStorage.getItem("cartItems");
+    if (storedItems) {
+      dispatch(setItems(JSON.parse(storedItems)));
+      // console.log("empty cart");
+    }
+  }, [dispatch]);
+
+  // Save cart items to localStorage whenever cartItems change
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    console.log("cart items changed");
+  }, [cartItems]);
 
   return (
     <div
@@ -114,11 +140,18 @@ const Header = () => {
             </div>
           </ul>
           <div className="header-buttons flex items-center gap-2 sm:w-1/3 sm:justify-end sm:hidden">
-            <CiShoppingCart
-              className="text-2xl cursor-pointer"
-              onClick={openCart}
-            />
-            <FaRegUserCircle className="text-lg cursor-pointer" />
+            <div>
+              <FaRegUserCircle className="text-lg cursor-pointer" />
+            </div>
+            <div className="relative">
+              <CiShoppingCart
+                className="text-2xl cursor-pointer"
+                onClick={openCart}
+              />
+              <div className="bg-orange-500 absolute -top-3 -right-4 rounded-full w-5 h-5 flex items-center justify-center">
+                <p className="text-white text-xs">{totalItem}</p>
+              </div>
+            </div>
           </div>
         </div>
         <div className="header-logo sm:w-1/3 sm:flex sm:justify-center">
@@ -131,11 +164,16 @@ const Header = () => {
           </Link>
         </div>
         <div className="header-buttons flex items-center gap-2 sm:w-1/3 sm:justify-end hidden sm:flex">
-          <CiShoppingCart
-            className="text-2xl cursor-pointer"
-            onClick={openCart}
-          />
-          <FaRegUserCircle className="text-lg cursor-pointer" />
+          <FaRegUserCircle className="text-2xl cursor-pointer" />
+          <div className="relative">
+            <CiShoppingCart
+              className="text-3xl cursor-pointer"
+              onClick={openCart}
+            />
+            <div className="bg-orange-500 absolute -top-3 -right-3 rounded-full w-5 h-5 flex items-center justify-center">
+              <p className="text-white text-xs">{totalItem}</p>
+            </div>
+          </div>
         </div>
       </div>
       <div
@@ -159,33 +197,46 @@ const Header = () => {
           {cartItems.length > 0 ? (
             <ul>
               {cartItems.map((item, index) => (
-                <li key={item.id} className="flex gap-2 items-center border-t border-gray-300 py-5 first:border-0">
+                <li
+                  key={item.id}
+                  className="flex gap-2 items-center border-t border-gray-300 py-5 first:border-0"
+                >
                   <div className="relative">
                     <img
                       src={item.imageUrl}
                       alt={item.title}
                       className="w-16 h-16 object-contain ml-4b bg-white rounded-sm shadow-sm"
                     />
-                    <IoIosClose className="text-white bg-gray-400 rounded-full absolute -left-2 -top-2 cursor-pointer"  onClick={() => handleRemoveItem(item.id)} />
+                    <IoIosClose
+                      className="text-white bg-gray-400 rounded-full absolute -left-2 -top-2 cursor-pointer"
+                      onClick={() => handleRemoveItem(item.id)}
+                    />
                   </div>
                   <div className="flex justify-between items-center w-full">
                     <div>
                       <p className="font-semibold text-sm">{item.title}</p>
+                      <p className="font-medium text-sm">{item.size}</p>
                       <p className="text-orange-500 font-semibold">
                         ${item.price}
                       </p>
                     </div>
                     <div className="flex items-center gap-1">
-                      <CiCirclePlus
-                        className="text-xl cursor-pointer"
-                        onClick={() => handleIncrementQty(item.id)}
+                      <CiCircleMinus
+                        className={`text-xl cursor-pointer ${
+                          item.quantity < 2
+                            ? "text-gray-400 cursor-not-allowed"
+                            : ""
+                        }`}
+                        onClick={() =>
+                          item.quantity > 1 && handleDecrementQty(item.id)
+                        }
                       />
                       <span className="text-orange-500 font-semibold">
                         {item.quantity}
                       </span>
-                      <CiCircleMinus
+                      <CiCirclePlus
                         className="text-xl cursor-pointer"
-                        onClick={() => handleDecrementQty(item.id)}
+                        onClick={() => handleIncrementQty(item.id)}
                       />
                     </div>
                   </div>
@@ -202,7 +253,9 @@ const Header = () => {
           <p className="font-bold">${totalPrice}</p>
         </div>
         <div className="cart-btn px-5 py-10">
-          <button className="bg-orange-500 w-full py-3 rounded-full text-white hover:bg-orange-600 transition-colors duration-300 ease-in-out">CHECKOUT</button>
+          <button className="bg-orange-500 w-full py-3 rounded-full text-white hover:bg-orange-600 transition-colors duration-300 ease-in-out">
+            CHECKOUT
+          </button>
         </div>
       </div>
     </div>

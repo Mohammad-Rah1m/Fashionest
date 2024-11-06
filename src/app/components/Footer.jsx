@@ -7,8 +7,7 @@ const Footer = () => {
         <div className="footer-logo w-full text-center sm:w-2/5 sm:text-left">
           <img src="/images/logo-white.svg" className="w-full"/>
           <p className="text-gray-400 mt-5">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae
-            numquam accusantium quas.
+          Fashionest offers trendy, high-quality clothing, accessories, and footwear, curated to elevate your style with versatile, modern pieces for every wardrobe.
           </p>
         </div>
         <div className="footer-menu w-full sm:w-3/5 flex justify-end gap-8">

@@ -26,9 +26,7 @@ const ProductDetails = ({ productItem }) => {
           {productItem.title}
         </h1>
         <p className="text-gray-500">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat nam,
-          vitae consectetur dolorum ipsum enim aspernatur eos impedit cumque,
-          repellat eveniet, itaque earum eum.
+        {productItem.description}
         </p>
         <label for="size">Size:</label>
         <select name="size" id="size" className="mt-5 border border-gray-300 p-1 ml-2 rounded-md">
