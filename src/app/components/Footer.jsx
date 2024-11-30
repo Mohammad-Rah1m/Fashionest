@@ -33,9 +33,10 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="footer-copyright py-2">
-        <p className="text-center font-semibold">Website Developed By Mohammad Rahim</p>
-      </div>
+      {/* <div className="footer-copyright py-2 flex justify-between px-10">
+        <p className="">Website Developed By <strong>Mohammad Rahim</strong></p>
+        <p>Website is still under construction</p>
+      </div> */}
     </div>
   );
 };

@@ -95,7 +95,7 @@ const Header = () => {
       </div>
       <div className="main-header px-5 py-5 flex flex-col-reverse items-center gap-2 relative sm:flex-row sm:justify-between sm:px-10">
         <div className="header-menu sm:w-1/3 flex justify-between gap-5 ">
-          <ul className="flex gap-2">
+          <ul className="flex gap-4 font-semibold">
             <Link href={"/"}>
               <li>Home</li>
             </Link>
